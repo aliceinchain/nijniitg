@@ -6,6 +6,7 @@ body {
     margin: 0;
     background: url('bad_apple.gif') no-repeat center center fixed;
     background-size: cover;
+    background-attachment: fixed; /* Привязывает фон к окну просмотра */
 }
 
 #image-container {
@@ -13,6 +14,7 @@ body {
     flex-wrap: wrap;
     gap: 10px;
     max-width: calc(15 * 110px); /* 15 изображений по 100px шириной + 10px отступ */
+    margin: auto; /* Центрирует контейнер по горизонтали */
 }
 
 .image-link {
