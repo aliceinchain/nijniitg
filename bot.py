@@ -48,14 +48,16 @@ def update_website(channel_link, image_filename):
     with open(html_file_path, 'r') as file:
         html_content = file.read()
 
-    # Добавление нового изображения и ссылки
+    # Добавление нового изображения и ссылки в контейнер
     new_image_html = f'''
     <a href="https://t.me/{channel_link}" class="image-link" target="_blank">
         <img src="images/{image_filename}" alt="Channel Avatar">
     </a>
     '''
-    # Обновление содержимого HTML-файла
-    html_content = html_content.replace('</body>', f'{new_image_html}</body>')
+    # Найти контейнер и добавить новый элемент
+    container_start = html_content.find('<div id="image-container">') + len('<div id="image-container">')
+    container_end = html_content.find('</div>', container_start)
+    html_content = html_content[:container_start] + new_image_html + html_content[container_start:]
 
     # Запись обновленного содержимого в HTML-файл
     with open(html_file_path, 'w') as file:
