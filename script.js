@@ -1,22 +1,15 @@
-// Пример массива изображений и ссылок
-const images = [
-    { url: 'IMAGE_URL_1', link: 'LINK_1' },
-    { url: 'IMAGE_URL_2', link: 'LINK_2' },
-    // Добавьте больше изображений по мере необходимости
-];
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Функция для загрузки изображений
+    function loadImages() {
+        const imageLinks = document.querySelectorAll('.image-link img');
+        imageLinks.forEach(img => {
+            img.onerror = () => {
+                console.error(`Failed to load image: ${img.src}`);
+                img.style.display = 'none'; // Скрыть изображение, если оно не загружается
+            };
+        });
+    }
 
-const imageContainer = document.getElementById('image-container');
-
-images.forEach(image => {
-    const a = document.createElement('a');
-    a.href = image.link;
-    a.className = 'image-link';
-    a.target = '_blank';
-
-    const img = document.createElement('img');
-    img.src = image.url;
-    img.alt = 'Image';
-
-    a.appendChild(img);
-    imageContainer.appendChild(a);
+    // Загрузка изображений при загрузке страницы
+    loadImages();
 });
