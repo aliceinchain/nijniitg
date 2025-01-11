@@ -1,40 +1,42 @@
-from telegram import Bot, Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import requests
-import os
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
-# Замените 'YOUR_BOT_TOKEN' на токен вашего бота
-bot = Bot(token='7483819477:AAEgQALJ2zROfdn3pPRSRcJlCpK_rnS26wk')
-updater = Updater(token='7483819477:AAEgQALJ2zROfdn3pPRSRcJlCpK_rnS26wk', use_context=True)
-dispatcher = updater.dispatcher
+# Функция, которая будет вызываться при получении команды /start
+async def start(update: Update, context) -> None:
+    await update.message.reply_text('Привет! Я ваш Telegram-бот.')
 
-# Директория для сохранения изображений
-IMAGE_DIR = 'path/to/your/image/directory'
-
-def start(update: Update, context):
-    update.message.reply_text('Отправьте ссылку на Telegram-канал, чтобы получить аватарку.')
-
-def handle_message(update: Update, context):
+async def handle_message(update: Update, context) -> None:
     channel_link = update.message.text
     if not channel_link.startswith('@'):
-        update.message.reply_text('Пожалуйста, отправьте корректную ссылку на канал.')
+        await update.message.reply_text('Пожалуйста, отправьте корректную ссылку на канал.')
         return
 
     # Получение информации о канале
-    chat = bot.get_chat(chat_id=channel_link)
+    chat = await context.bot.get_chat(chat_id=channel_link)
     photo = chat.photo.big_file_id
-    file = bot.get_file(photo)
-    file.download(out=os.path.join(IMAGE_DIR, f'{chat.id}.jpg'))
+    file = await context.bot.get_file(photo)
+    await file.download_to_drive(f'images/{chat.id}.jpg')
 
     # Обновление веб-сайта
     update_website(channel_link, f'{chat.id}.jpg')
 
-    update.message.reply_text('Аватарка канала успешно добавлена на сайт!')
+    await update.message.reply_text('Аватарка канала успешно добавлена на сайт!')
 
 def update_website(channel_link, image_filename):
     # Здесь вы можете добавить код для обновления вашего веб-сайта
     # Например, добавить новый элемент в HTML-файл или обновить базу данных
     pass
 
-dispatcher.add_handler(CommandHandler('start', start))
-dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
+def main() -> None:
+    # Замените 'YOUR_BOT_TOKEN' на токен вашего бота
+    application = ApplicationBuilder().token('7483819477:AAEgQALJ2zROfdn3pPRSRcJlCpK_rnS26wk').build()
+
+    # Регистрация обработчика команды /start
+    application.add_handler(CommandHandler('start', start))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+
+    # Запуск бота
+    application.run_polling()
+
+if __name__ == '__main__':
+    main()
