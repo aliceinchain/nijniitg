@@ -18,6 +18,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     if channel_link.startswith('https://t.me/'):
         channel_link = channel_link.split('/')[-1]
 
+    # Удаляем символ @, если он присутствует
+    if channel_link.startswith('@'):
+        channel_link = channel_link[1:]
+
     try:
         # Получение информации о канале
         chat = await context.bot.get_chat(chat_id=channel_link)
@@ -36,7 +40,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
         await update.message.reply_text('Аватарка канала успешно добавлена на сайт!')
     except error.BadRequest as e:
-        await update.message.reply_text(f'Ошибка: {e.message}. Пожалуйста, проверьте ссылку на канал.')
+        await update.message.reply_text(f'Ошибка: {e.message}. Пожалуйста, проверьте ссылку на канал и убедитесь, что бот имеет доступ к каналу.')
     except Exception as e:
         await update.message.reply_text(f'Произошла ошибка: {str(e)}')
 
