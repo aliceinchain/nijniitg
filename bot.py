@@ -1,5 +1,4 @@
 import os
-import subprocess
 from telegram import Update, error
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -32,14 +31,37 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         file_path = f'images/{chat.id}.jpg'
         await file.download_to_drive(file_path)
 
-        # Вызов скрипта для сортировки изображений
-        subprocess.run(['python', 'sort_images.py'])
+        # Обновление веб-сайта
+        update_website(channel_link, f'{chat.id}.jpg')
 
         await update.message.reply_text('Аватарка канала успешно добавлена на сайт!')
     except error.BadRequest as e:
         await update.message.reply_text(f'Ошибка: {e.message}. Пожалуйста, проверьте ссылку на канал и убедитесь, что бот имеет доступ к каналу.')
     except Exception as e:
         await update.message.reply_text(f'Произошла ошибка: {str(e)}')
+
+def update_website(channel_link, image_filename):
+    # Путь к вашему HTML-файлу
+    html_file_path = 'index.html'
+
+    # Чтение текущего содержимого HTML-файла
+    with open(html_file_path, 'r') as file:
+        html_content = file.read()
+
+    # Добавление нового изображения и ссылки в контейнер
+    new_image_html = f'''
+    <a href="https://t.me/{channel_link.lstrip('@')}" class="image-link" target="_blank">
+        <img src="images/{image_filename}" alt="Channel Avatar">
+    </a>
+    '''
+    # Найти контейнер и добавить новый элемент
+    container_start = html_content.find('<div id="image-container">') + len('<div id="image-container">')
+    container_end = html_content.find('</div>', container_start)
+    html_content = html_content[:container_start] + new_image_html + html_content[container_start:]
+
+    # Запись обновленного содержимого в HTML-файл
+    with open(html_file_path, 'w') as file:
+        file.write(html_content)
 
 def main() -> None:
     # Использование вашего токена

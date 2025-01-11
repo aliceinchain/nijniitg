@@ -1,15 +1,52 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-    // Функция для загрузки изображений
-    function loadImages() {
-        const imageLinks = document.querySelectorAll('.image-link img');
-        imageLinks.forEach(img => {
-            img.onerror = () => {
-                console.error(`Failed to load image: ${img.src}`);
-                img.style.display = 'none'; // Скрыть изображение, если оно не загружается
-            };
-        });
+    // Функция для вычисления среднего цвета изображения
+    function getAverageColor(imgElement) {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const width = imgElement.width;
+        const height = imgElement.height;
+        canvas.width = width;
+        canvas.height = height;
+        context.drawImage(imgElement, 0, 0, width, height);
+        const imageData = context.getImageData(0, 0, width, height).data;
+        let r = 0, g = 0, b = 0;
+        for (let i = 0; i < imageData.length; i += 4) {
+            r += imageData[i];
+            g += imageData[i + 1];
+            b += imageData[i + 2];
+        }
+        const pixelCount = imageData.length / 4;
+        return { r: r / pixelCount, g: g / pixelCount, b: b / pixelCount };
     }
 
-    // Загрузка изображений при загрузке страницы
-    loadImages();
+    // Функция для сортировки изображений по среднему цвету
+    function sortImagesByColor() {
+        const imageLinks = document.querySelectorAll('.image-link');
+        const imagesArray = Array.from(imageLinks);
+        imagesArray.sort((a, b) => {
+            const colorA = getAverageColor(a.querySelector('img'));
+            const colorB = getAverageColor(b.querySelector('img'));
+            const brightnessA = (colorA.r + colorA.g + colorA.b) / 3;
+            const brightnessB = (colorB.r + colorB.g + colorB.b) / 3;
+            return brightnessA - brightnessB;
+        });
+        const container = document.getElementById('image-container');
+        imagesArray.forEach(imgLink => container.appendChild(imgLink));
+    }
+
+    // Загрузка изображений и сортировка по цвету
+    const imageLinks = document.querySelectorAll('.image-link img');
+    let loadedImages = 0;
+    imageLinks.forEach(img => {
+        img.onload = () => {
+            loadedImages++;
+            if (loadedImages === imageLinks.length) {
+                sortImagesByColor();
+            }
+        };
+        img.onerror = () => {
+            console.error(`Failed to load image: ${img.src}`);
+            img.style.display = 'none'; // Скрыть изображение, если оно не загружается
+        };
+    });
 });
