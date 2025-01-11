@@ -1,0 +1,26 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+#image-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.image-link {
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.image-link img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
