@@ -42,7 +42,7 @@ def update_website(channel_link, image_filename):
 
 def main() -> None:
     # Замените 'YOUR_BOT_TOKEN' на токен вашего бота
-    application = ApplicationBuilder().token('YOUR_BOT_TOKEN').build()
+    application = ApplicationBuilder().token('7483819477:AAEgQALJ2zROfdn3pPRSRcJlCpK_rnS26wk').build()
 
     # Регистрация обработчика команды /start
     application.add_handler(CommandHandler('start', start))
