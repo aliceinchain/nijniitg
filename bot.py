@@ -9,6 +9,10 @@ load_dotenv()
 # Получение токена из переменной окружения
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
+# Проверка, что токен загружен
+if not TELEGRAM_BOT_TOKEN:
+    raise ValueError("Telegram bot token is not set in environment variables.")
+
 # Функция, которая будет вызываться при получении команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text('Привет! Я ваш Telegram-бот. Отправьте ссылку на канал.')
