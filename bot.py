@@ -41,12 +41,28 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(f'Произошла ошибка: {str(e)}')
 
 def update_website(channel_link, image_filename):
-    # Здесь вы можете добавить код для обновления вашего веб-сайта
-    # Например, добавить новый элемент в HTML-файл или обновить базу данных
-    pass
+    # Путь к вашему HTML-файлу
+    html_file_path = 'index.html'
+
+    # Чтение текущего содержимого HTML-файла
+    with open(html_file_path, 'r') as file:
+        html_content = file.read()
+
+    # Добавление нового изображения и ссылки
+    new_image_html = f'''
+    <a href="https://t.me/{channel_link}" class="image-link" target="_blank">
+        <img src="images/{image_filename}" alt="Channel Avatar">
+    </a>
+    '''
+    # Обновление содержимого HTML-файла
+    html_content = html_content.replace('</body>', f'{new_image_html}</body>')
+
+    # Запись обновленного содержимого в HTML-файл
+    with open(html_file_path, 'w') as file:
+        file.write(html_content)
 
 def main() -> None:
-    # Замените 'YOUR_BOT_TOKEN' на токен вашего бота
+    # Использование вашего токена
     application = ApplicationBuilder().token('7483819477:AAEgQALJ2zROfdn3pPRSRcJlCpK_rnS26wk').build()
 
     # Регистрация обработчика команды /start
