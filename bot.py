@@ -1,6 +1,17 @@
 import os
+from dotenv import load_dotenv
 from telegram import Update, error
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+
+# Загрузка переменных окружения из файла .env
+load_dotenv()
+
+# Получение токена из переменной окружения
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+
+# Проверка, что токен загружен
+if not TELEGRAM_BOT_TOKEN:
+    raise ValueError("Telegram bot token is not set in environment variables.")
 
 # Функция, которая будет вызываться при получении команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -65,7 +76,7 @@ def update_website(channel_link, image_filename):
 
 def main() -> None:
     # Использование вашего токена
-    application = ApplicationBuilder().token('7483819477:AAEgQALJ2zROfdn3pPRSRcJlCpK_rnS26wk').build()
+    application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
     # Регистрация обработчика команды /start
     application.add_handler(CommandHandler('start', start))
