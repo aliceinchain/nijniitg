@@ -7,6 +7,45 @@ body {
     background: url('bad_apple.gif') no-repeat center center fixed;
     background-size: cover;
     background-attachment: fixed; /* Привязывает фон к окну просмотра */
+    overflow: hidden; /* Скрывает прокрутку */
+}
+
+#floating-text-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Делает текст некликабельным */
+    z-index: 10; /* Убедитесь, что текст отображается поверх изображений */
+}
+
+.floating-text {
+    position: absolute;
+    white-space: nowrap;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    animation: floatText 10s linear infinite;
+}
+
+@keyframes floatText {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
 }
 
 #image-container {
@@ -15,6 +54,7 @@ body {
     gap: 10px;
     max-width: calc(15 * 110px); /* 15 изображений по 100px шириной + 10px отступ */
     margin: auto; /* Центрирует контейнер по горизонтали */
+    z-index: 5; /* Убедитесь, что изображения отображаются под текстом */
 }
 
 .image-link {

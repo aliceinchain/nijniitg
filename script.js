@@ -52,4 +52,25 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // Сортировка изображений при каждой перезагрузке страницы
     sortImagesByColor();
+
+    // Функция для добавления проплывающих надписей
+    function addFloatingText() {
+        const container = document.getElementById('floating-text-container');
+        fetch('phrases.txt')
+            .then(response => response.text())
+            .then(data => {
+                const phrases = data.split('/');
+                phrases.forEach((phrase, index) => {
+                    const textElement = document.createElement('div');
+                    textElement.className = 'floating-text';
+                    textElement.textContent = phrase.trim();
+                    textElement.style.animationDelay = `${index * 2}s`; // Задержка анимации для каждой фразы
+                    container.appendChild(textElement);
+                });
+            })
+            .catch(error => console.error('Error loading phrases:', error));
+    }
+
+    // Добавление проплывающих надписей
+    addFloatingText();
 });
