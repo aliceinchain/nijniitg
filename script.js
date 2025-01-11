@@ -49,4 +49,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             img.style.display = 'none'; // Скрыть изображение, если оно не загружается
         };
     });
+
+    // Сортировка изображений при каждой перезагрузке страницы
+    sortImagesByColor();
 });
