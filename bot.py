@@ -1,21 +1,34 @@
+import os
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # Функция, которая будет вызываться при получении команды /start
-async def start(update: Update, context) -> None:
-    await update.message.reply_text('Привет! Я ваш Telegram-бот.')
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text('Привет! Я ваш Telegram-бот. Отправьте ссылку на канал.')
 
-async def handle_message(update: Update, context) -> None:
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     channel_link = update.message.text
-    if not channel_link.startswith('@'):
+
+    # Проверка формата ссылки
+    if not (channel_link.startswith('@') or channel_link.startswith('https://')):
         await update.message.reply_text('Пожалуйста, отправьте корректную ссылку на канал.')
         return
+
+    # Если ссылка начинается с https://, извлекаем имя пользователя
+    if channel_link.startswith('https://'):
+        channel_link = channel_link.split('/')[-1]
 
     # Получение информации о канале
     chat = await context.bot.get_chat(chat_id=channel_link)
     photo = chat.photo.big_file_id
     file = await context.bot.get_file(photo)
-    await file.download_to_drive(f'images/{chat.id}.jpg')
+
+    # Создание директории для сохранения изображений, если она не существует
+    os.makedirs('images', exist_ok=True)
+
+    # Сохранение изображения
+    file_path = f'images/{chat.id}.jpg'
+    await file.download_to_drive(file_path)
 
     # Обновление веб-сайта
     update_website(channel_link, f'{chat.id}.jpg')
@@ -29,7 +42,7 @@ def update_website(channel_link, image_filename):
 
 def main() -> None:
     # Замените 'YOUR_BOT_TOKEN' на токен вашего бота
-    application = ApplicationBuilder().token('7483819477:AAEgQALJ2zROfdn3pPRSRcJlCpK_rnS26wk').build()
+    application = ApplicationBuilder().token('YOUR_BOT_TOKEN').build()
 
     # Регистрация обработчика команды /start
     application.add_handler(CommandHandler('start', start))
