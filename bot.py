@@ -14,13 +14,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text('Пожалуйста, отправьте корректную ссылку на канал.')
         return
 
-    # Если ссылка начинается с https://t.me/, извлекаем имя пользователя
+    # Если ссылка начинается с https://t.me/, извлекаем имя пользователя и добавляем @
     if channel_link.startswith('https://t.me/'):
-        channel_link = channel_link.split('/')[-1]
-
-    # Удаляем символ @, если он присутствует
-    if channel_link.startswith('@'):
-        channel_link = channel_link[1:]
+        channel_link = '@' + channel_link.split('/')[-1]
 
     try:
         # Получение информации о канале
@@ -54,7 +50,7 @@ def update_website(channel_link, image_filename):
 
     # Добавление нового изображения и ссылки в контейнер
     new_image_html = f'''
-    <a href="https://t.me/{channel_link}" class="image-link" target="_blank">
+    <a href="https://t.me/{channel_link.lstrip('@')}" class="image-link" target="_blank">
         <img src="images/{image_filename}" alt="Channel Avatar">
     </a>
     '''
