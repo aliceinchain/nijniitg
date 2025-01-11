@@ -1,3 +1,2 @@
 # .gitignore
-config.json
-.env
+bot.py
