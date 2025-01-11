@@ -5,8 +5,9 @@ from PIL import Image
 def calculate_brightness(image_path):
     with Image.open(image_path) as img:
         img = img.resize((50, 50))  # Уменьшаем изображение для ускорения вычислений
-        pixels = list(img.getdata())
-        brightness = sum(sum(pixel) / 3 for pixel in pixels) / len(pixels)
+        grayscale_img = img.convert('L')  # Преобразование в оттенки серого
+        pixels = list(grayscale_img.getdata())
+        brightness = sum(pixels) / len(pixels)
         return brightness
 
 # Функция для сортировки изображений по средней яркости
