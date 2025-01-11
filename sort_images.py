@@ -1,33 +1,28 @@
 import os
 from PIL import Image
 
-# Функция для вычисления среднего цвета изображения
-def calculate_average_color(image_path):
+# Функция для вычисления средней яркости изображения
+def calculate_brightness(image_path):
     with Image.open(image_path) as img:
         img = img.resize((50, 50))  # Уменьшаем изображение для ускорения вычислений
         pixels = list(img.getdata())
-        r, g, b = 0, 0, 0
-        for pixel in pixels:
-            r += pixel[0]
-            g += pixel[1]
-            b += pixel[2]
-        count = len(pixels)
-        return (r / count, g / count, b / count)
+        brightness = sum(sum(pixel) / 3 for pixel in pixels) / len(pixels)
+        return brightness
 
-# Функция для сортировки изображений по среднему цвету
-def sort_images_by_color(image_files):
-    # Вычисляем средний цвет для каждого изображения
-    image_colors = [(calculate_average_color(f'images/{file}'), file) for file in image_files]
-    # Сортируем изображения по среднему цвету
-    image_colors.sort(key=lambda x: x[0])
-    return [file for _, file in image_colors]
+# Функция для сортировки изображений по средней яркости
+def sort_images_by_brightness(image_files):
+    # Вычисляем среднюю яркость для каждого изображения
+    image_brightness = [(calculate_brightness(f'images/{file}'), file) for file in image_files]
+    # Сортируем изображения по средней яркости
+    image_brightness.sort(key=lambda x: x[0])
+    return [file for _, file in image_brightness]
 
 def update_website():
     # Получение списка всех изображений
     image_files = [f for f in os.listdir('images') if f.endswith('.jpg')]
 
-    # Сортировка изображений по среднему цвету
-    sorted_images = sort_images_by_color(image_files)
+    # Сортировка изображений по средней яркости
+    sorted_images = sort_images_by_brightness(image_files)
 
     # Путь к вашему HTML-файлу
     html_file_path = 'index.html'
