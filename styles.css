@@ -145,12 +145,12 @@ body {
 }
 
 #info-panel a {
-    color: #1DA1F2; /* Цвет ссылки */
+    color: #ffffff; /* Цвет ссылки */
     text-decoration: underline; /* Подчеркивание ссылки */
 }
 
 #info-panel a:hover {
-    color: #0078d7; /* Цвет ссылки при наведении */
+    color: #ffffff; /* Цвет ссылки при наведении */
 }
 
 #start-audio-button {
