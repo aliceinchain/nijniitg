@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
                     textElement.textContent = phrase.trim();
-                    textElement.style.animationDelay = `${index * 2}s`; // Задержка анимации для каждой фразы
 
                     // Случайное размещение текста
                     const x = Math.random() * window.innerWidth;

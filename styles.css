@@ -27,34 +27,6 @@ body {
     font-weight: bold;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    animation: floatText 10s linear infinite, fadeIn 2s ease-in-out forwards;
-}
-
-@keyframes floatText {
-    0% {
-        transform: translateY(100%);
-        opacity: 0;
-    }
-    20% {
-        opacity: 1;
-    }
-    80% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-}
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
 }
 
 #image-container {
