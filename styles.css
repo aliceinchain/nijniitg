@@ -27,7 +27,7 @@ body {
     font-weight: bold;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    animation: floatText 10s linear infinite; /* Средняя скорость анимации */
+    animation: floatText linear infinite; /* Средняя скорость анимации */
 }
 
 @keyframes floatText {

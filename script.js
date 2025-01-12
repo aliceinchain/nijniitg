@@ -77,6 +77,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     const y = Math.random() * window.innerHeight;
                     textElement.style.top = `${y}px`;
 
+                    // Случайное время исчезновения (до 5 секунд)
+                    const animationDuration = Math.random() * 5 + 5; // от 5 до 10 секунд
+                    textElement.style.animationDuration = `${animationDuration}s`;
+
                     container.appendChild(textElement);
                     currentPhrases.push(textElement);
 
