@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             .then(data => {
                 const phrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
                 const maxPhrases = 4; // Максимальное количество одновременно отображаемых фраз
-                let currentPhrases = [];
 
                 function addPhrase() {
                     if (phrases.length === 0) return;
@@ -81,12 +80,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     textElement.style.animationDuration = `${animationDuration}s`;
 
                     container.appendChild(textElement);
-                    currentPhrases.push(textElement);
 
                     // Удаление элемента после завершения анимации
                     textElement.addEventListener('animationend', () => {
                         container.removeChild(textElement);
-                        currentPhrases = currentPhrases.filter(el => el !== textElement);
                         addPhrase(); // Добавление новой фразы
                     });
                 }
@@ -107,7 +104,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const volumeSlider = document.getElementById('volume-slider');
     const pauseButton = document.getElementById('pause-button');
 
-    audio.play();
+    // Автовоспроизведение аудио при каждом обновлении страницы
+    audio.play().catch(error => {
+        console.error('Error playing audio:', error);
+    });
 
     // Управление громкостью
     volumeSlider.value = audio.volume;
