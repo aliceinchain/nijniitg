@@ -60,11 +60,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
             .then(response => response.text())
             .then(data => {
                 const phrases = data.split('/');
-                let currentIndex = 0;
+                const maxPhrases = 4; // Максимальное количество одновременно отображаемых фраз
+                let currentPhrases = [];
 
                 function addPhrase() {
-                    if (currentIndex >= phrases.length) return;
-                    const phrase = phrases[currentIndex];
+                    if (phrases.length === 0) return;
+                    const randomIndex = Math.floor(Math.random() * phrases.length);
+                    const phrase = phrases[randomIndex];
+                    phrases.splice(randomIndex, 1); // Удаление использованной фразы из списка
+
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
                     textElement.textContent = phrase.trim();
@@ -74,17 +78,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     textElement.style.top = `${y}px`;
 
                     container.appendChild(textElement);
+                    currentPhrases.push(textElement);
 
                     // Удаление элемента после завершения анимации
                     textElement.addEventListener('animationend', () => {
                         container.removeChild(textElement);
-                        currentIndex++;
+                        currentPhrases = currentPhrases.filter(el => el !== textElement);
                         addPhrase(); // Добавление новой фразы
                     });
                 }
 
-                // Инициализация первой фразы
-                addPhrase();
+                // Инициализация первых фраз
+                for (let i = 0; i < maxPhrases; i++) {
+                    addPhrase();
+                }
             })
             .catch(error => console.error('Error loading phrases:', error));
     }
