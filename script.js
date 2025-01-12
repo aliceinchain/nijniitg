@@ -126,10 +126,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     pauseButton.addEventListener('click', () => {
         if (audio.paused) {
             audio.play();
-            pauseButton.textContent = 'Pause';
+            pauseButton.textContent = 'АСТААНВИ МУЗЫКУУУ';
         } else {
             audio.pause();
-            pauseButton.textContent = 'Play';
+            pauseButton.textContent = 'ВКЛЮЧИ ШАРМАНКУУ';
         }
     });
 
