@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
             .then(data => {
                 let allPhrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
                 const maxPhrases = 4; // Максимальное количество одновременно отображаемых фраз
-    
+                let currentPhrases = [];
+
                 function addPhrase() {
                     if (allPhrases.length === 0) {
                         // If all phrases have been shown, shuffle and reuse
@@ -70,34 +71,39 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     const randomIndex = Math.floor(Math.random() * allPhrases.length);
                     const phrase = allPhrases[randomIndex];
                     allPhrases.splice(randomIndex, 1); // Remove the phrase after using it
-    
+
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
                     textElement.textContent = phrase;
-    
+
                     const y = Math.random() * window.innerHeight;
                     textElement.style.top = `${y}px`;
-    
+
                     const animationDuration = Math.random() * 5 + 5; // от 5 до 10 секунд
                     textElement.style.animationDuration = `${animationDuration}s`;
-    
+
                     container.appendChild(textElement);
-    
+                    currentPhrases.push(textElement);
+
+                    // Log the phrase and animation duration for debugging
+                    console.log(`Added phrase: "${phrase}" with duration: ${animationDuration}s`);
+
                     // Remove the text element after animation
                     textElement.addEventListener('animationend', () => {
                         container.removeChild(textElement);
+                        currentPhrases = currentPhrases.filter(el => el !== textElement);
                         addPhrase(); // Add a new phrase to maintain the count
                     });
                 }
-    
+
                 // Start with the maximum number of phrases
                 for (let i = 0; i < maxPhrases; i++) {
                     addPhrase();
                 }
             })
             .catch(error => console.error('Error loading phrases:', error));
-    }    
-    
+    }
+
     // Добавление проплывающих надписей
     addFloatingText();
 
