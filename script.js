@@ -134,6 +134,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     // Показать панель при загрузке страницы
-    infoPanel.style.display = 'block';
+    infoPanel.style.display = 'flex';
     backgroundOverlay.style.display = 'block';
 });
