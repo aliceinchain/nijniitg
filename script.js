@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     }
                     const randomIndex = Math.floor(Math.random() * allPhrases.length);
                     const phrase = allPhrases[randomIndex];
-                    // No need to remove the phrase now, since we're reusing
+                    allPhrases.splice(randomIndex, 1); // Remove the phrase after using it
     
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
@@ -96,9 +96,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 }
             })
             .catch(error => console.error('Error loading phrases:', error));
-    }
+    }    
     
-    // Rest of your DOMContentLoaded event listener code...
     // Добавление проплывающих надписей
     addFloatingText();
 
