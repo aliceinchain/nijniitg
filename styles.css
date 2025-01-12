@@ -200,6 +200,8 @@ body {
     margin-top: 10px;
     cursor: pointer;
     transition: background 0.3s;
+    z-index: 1000; /* Убедитесь, что кнопка находится поверх других элементов */
+    pointer-events: auto; /* Убедитесь, что кнопка кликабельна */
 }
 
 #start-audio-button:hover {
