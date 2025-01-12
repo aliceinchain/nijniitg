@@ -50,12 +50,24 @@ body {
     font-weight: bold;
     color: white;
     text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8); /* Увеличенная толщина обводки */
-    animation: floatAnimation linear;
+    animation: floatAnimation linear infinite; /* Средняя скорость анимации */
 }
 
 @keyframes floatAnimation {
-    from { opacity: 1; }
-    to { opacity: 0; }
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
 }
 
 #image-container {
