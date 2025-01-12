@@ -46,8 +46,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 10;
+            z-index: 3;
             pointer-events: none;
+            overflow: hidden;
         }
 
         .floating-text {
@@ -56,20 +57,20 @@
             font-size: 24px;
             font-weight: bold;
             color: white;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
-            animation: floatAnimation linear infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             pointer-events: none;
+            opacity: 0;
         }
 
-        @keyframes floatAnimation {
+        @keyframes float {
             0% {
-                transform: translateX(100%);
+                transform: translateX(100vw);
                 opacity: 0;
             }
-            20% {
+            10% {
                 opacity: 1;
             }
-            80% {
+            90% {
                 opacity: 1;
             }
             100% {
@@ -83,6 +84,7 @@
             height: 80vh;
             overflow-y: auto;
             margin-top: 20px;
+            z-index: 4;
         }
 
         #image-container {
@@ -222,7 +224,7 @@
     <div id="floating-text-container"></div>
     <div id="scroll-container">
         <div id="image-container">
-            <a href="https://t.me/shitpost220" class="image-link" target="_blank">
+  <a href="https://t.me/shitpost220" class="image-link" target="_blank">
                 <img src="images/-1002321237576.jpg" alt="Channel Avatar">
             </a>
             
@@ -942,13 +944,14 @@
     </div>
     <div id="audio-player">
         <audio id="background-audio" src="audio.mp3" loop></audio>
-        <input type="range" id="volume-slider" min="0" max="1" step="0.01">
+        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
         <button id="pause-button">АСТААНВИ МУЗЫКУУУ</button>
     </div>
     <div id="info-panel">
         <p>Халоу деар юзерс, это так называемый link tree по Нижним ТГ каналам. Огромное спасибо <a href="https://t.me/golodomorok" target="_blank">@golodomorok</a> и его каналу <a href="https://t.me/oil_records" target="_blank">https://t.me/oil_records</a> за помощь в "собери их всех". Канал создательницы <a href="https://t.me/ualicechtotobolit" target="_blank">https://t.me/ualicechtotobolit</a>, по всем вопросам обращаться в чат канала или в личку <a href="https://t.me/aliceinpain" target="_blank">@aliceinpain</a> (за добавлением в список туда тоже). З.Ы. - всё сделано через ии а так-же через жопу с минимальными скиллами в програмизничиство, так что тебе придется подождать пока изображения прогрузятся и обновить страничку чтоб отсортировать всё по цвету.</p>
         <button id="start-audio-button">дааа сука дай посмотреть</button>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const audio = document.getElementById('background-audio');
@@ -958,7 +961,45 @@
             const infoPanel = document.getElementById('info-panel');
             const backgroundOverlay = document.getElementById('background-overlay');
             const blurOverlay = document.getElementById('blur-overlay');
+            const textContainer = document.getElementById('floating-text-container');
 
+            // Функция для создания плавающего текста
+            function createFloatingText(text) {
+                const floatingText = document.createElement('div');
+                floatingText.className = 'floating-text';
+                floatingText.textContent = text;
+                
+                // Случайная позиция по вертикали
+                const yPosition = Math.random() * (window.innerHeight - 50);
+                floatingText.style.top = `${yPosition}px`;
+                
+                // Случайная длительность анимации
+                const duration = 15 + Math.random() * 10;
+                floatingText.style.animation = `float ${duration}s linear`;
+                
+                textContainer.appendChild(floatingText);
+                
+                // Удаление элемента после завершения анимации
+                floatingText.addEventListener('animationend', () => {
+                    floatingText.remove();
+                });
+            }
+
+            // Загрузка фраз из файла
+            fetch('phrases.txt')
+                .then(response => response.text())
+                .then(text => {
+                    const phrases = text.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
+                    
+                    // Создание новых фраз с интервалом
+                    setInterval(() => {
+                        const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+                        createFloatingText(randomPhrase);
+                    }, 3000);
+                })
+                .catch(error => console.error('Error loading phrases:', error));
+
+            // Настройка аудиоплеера
             volumeSlider.value = audio.volume;
             volumeSlider.addEventListener('input', (event) => {
                 audio.volume = event.target.value;
