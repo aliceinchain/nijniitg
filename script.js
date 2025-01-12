@@ -66,26 +66,65 @@ document.addEventListener('DOMContentLoaded', (event) => {
         });
     }
 
-    // Загрузка изображений и сортировка по цвету
-    const imageLinks = document.querySelectorAll('.image-link img');
-    let loadedImages = 0;
-    imageLinks.forEach(async (img) => {
-        const dataUrl = await resizeImage(img, 200, 200);
-        img.src = dataUrl;
-        img.onload = () => {
-            loadedImages++;
-            if (loadedImages === imageLinks.length) {
-                sortImagesByColor();
+    // Функция для добавления атрибута loading="lazy" к изображениям
+    function addLazyLoadingToImages() {
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+            if (!img.hasAttribute('loading')) {
+                img.setAttribute('loading', 'lazy');
             }
-        };
-        img.onerror = () => {
-            console.error(`Failed to load image: ${img.src}`);
-            img.style.display = 'none'; // Скрыть изображение, если оно не загружается
-        };
-    });
+        });
+    }
 
-    // Сортировка изображений при каждой перезагрузке страницы
-    sortImagesByColor();
+    // Функция для добавления новых изображений
+    function addNewImages(images) {
+        const container = document.getElementById('image-container');
+        images.forEach(image => {
+            const link = document.createElement('a');
+            link.href = image.link;
+            link.target = '_blank';
+            link.className = 'image-link';
+
+            const img = document.createElement('img');
+            img.src = image.src;
+            img.alt = image.alt;
+            img.loading = 'lazy'; // Добавляем атрибут loading="lazy"
+
+            link.appendChild(img);
+            container.appendChild(link);
+        });
+
+        // Загрузка изображений и сортировка по цвету
+        const imageLinks = document.querySelectorAll('.image-link img');
+        let loadedImages = 0;
+        imageLinks.forEach(async (img) => {
+            const dataUrl = await resizeImage(img, 200, 200);
+            img.src = dataUrl;
+            img.onload = () => {
+                loadedImages++;
+                if (loadedImages === imageLinks.length) {
+                    sortImagesByColor();
+                }
+            };
+            img.onerror = () => {
+                console.error(`Failed to load image: ${img.src}`);
+                img.style.display = 'none'; // Скрыть изображение, если оно не загружается
+            };
+        });
+    }
+
+    // Пример данных для новых изображений
+    const newImages = [
+        { src: 'images/new-image-1.jpg', alt: 'New Image 1', link: 'https://t.me/newlink1' },
+        { src: 'images/new-image-2.jpg', alt: 'New Image 2', link: 'https://t.me/newlink2' },
+        // Добавьте больше изображений по мере необходимости
+    ];
+
+    // Добавление новых изображений
+    addNewImages(newImages);
+
+    // Добавление атрибута loading="lazy" к уже существующим изображениям
+    addLazyLoadingToImages();
 
     // Функция для добавления проплывающих надписей
     function addFloatingText() {
