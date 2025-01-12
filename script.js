@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     if (phrases.length === 0) return;
                     const randomIndex = Math.floor(Math.random() * phrases.length);
                     const phrase = phrases[randomIndex];
+                    phrases.splice(randomIndex, 1); // Удаление использованной фразы из списка
 
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
