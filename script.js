@@ -61,49 +61,44 @@ document.addEventListener('DOMContentLoaded', (event) => {
             .then(data => {
                 let allPhrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
                 const maxPhrases = 4; // Максимальное количество одновременно отображаемых фраз
-                let currentPhrases = [];
     
                 function addPhrase() {
                     if (allPhrases.length === 0) {
-                        // Optionally, refill allPhrases if you want to loop through them again
-                        // allPhrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
-                        return;
+                        // If all phrases have been shown, shuffle and reuse
+                        allPhrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
                     }
                     const randomIndex = Math.floor(Math.random() * allPhrases.length);
                     const phrase = allPhrases[randomIndex];
-                    allPhrases.splice(randomIndex, 1); // Удаление использованной фразы из списка
+                    // No need to remove the phrase now, since we're reusing
     
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
                     textElement.textContent = phrase;
     
-                    // Случайное размещение текста по вертикали
                     const y = Math.random() * window.innerHeight;
                     textElement.style.top = `${y}px`;
     
-                    // Случайное время исчезновения (до 5 секунд)
                     const animationDuration = Math.random() * 5 + 5; // от 5 до 10 секунд
                     textElement.style.animationDuration = `${animationDuration}s`;
     
                     container.appendChild(textElement);
-                    currentPhrases.push(textElement);
     
-                    // Удаление элемента после завершения анимации
+                    // Remove the text element after animation
                     textElement.addEventListener('animationend', () => {
                         container.removeChild(textElement);
-                        currentPhrases = currentPhrases.filter(el => el !== textElement);
-                        addPhrase(); // Добавление новой фразы
+                        addPhrase(); // Add a new phrase to maintain the count
                     });
                 }
     
-                // Инициализация первых фраз
+                // Start with the maximum number of phrases
                 for (let i = 0; i < maxPhrases; i++) {
                     addPhrase();
                 }
             })
             .catch(error => console.error('Error loading phrases:', error));
-    }    
-
+    }
+    
+    // Rest of your DOMContentLoaded event listener code...
     // Добавление проплывающих надписей
     addFloatingText();
 
