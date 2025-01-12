@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 
-    // Автовоспроизведение аудио после взаимодействия с пользователем
+    // Воспроизведение аудио при нажатии на кнопку
     startAudioButton.addEventListener('click', () => {
         audio.play().catch(error => {
             console.error('Error playing audio:', error);
