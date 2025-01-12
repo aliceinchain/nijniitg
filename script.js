@@ -60,7 +60,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
             .then(response => response.text())
             .then(data => {
                 const phrases = data.split('/');
-                phrases.forEach((phrase, index) => {
+                const maxPhrases = 5; // Максимальное количество одновременно отображаемых фраз
+                let currentPhrases = [];
+
+                function addPhrase() {
+                    if (phrases.length === 0) return;
+                    const phrase = phrases.shift();
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
                     textElement.textContent = phrase.trim();
@@ -72,7 +77,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     textElement.style.top = `${y}px`;
 
                     container.appendChild(textElement);
-                });
+                    currentPhrases.push(textElement);
+
+                    // Удаление элемента после завершения анимации
+                    textElement.addEventListener('animationend', () => {
+                        container.removeChild(textElement);
+                        currentPhrases = currentPhrases.filter(el => el !== textElement);
+                        addPhrase(); // Добавление новой фразы
+                    });
+                }
+
+                // Инициализация первых фраз
+                for (let i = 0; i < maxPhrases; i++) {
+                    addPhrase();
+                }
             })
             .catch(error => console.error('Error loading phrases:', error));
     }
