@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         fetch('phrases.txt')
             .then(response => response.text())
             .then(data => {
-                const phrases = data.split('/');
+                const phrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
                 const maxPhrases = 4; // Максимальное количество одновременно отображаемых фраз
                 let currentPhrases = [];
 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
-                    textElement.textContent = phrase.trim();
+                    textElement.textContent = phrase;
 
                     // Случайное размещение текста по вертикали
                     const y = Math.random() * window.innerHeight;
