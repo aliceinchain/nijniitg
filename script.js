@@ -120,6 +120,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // Пример данных для новых изображений (удалите или закомментируйте эту строку, если не нужно)
     const newImages = [
+        { src: 'image1.jpg', link: 'https://example.com/image1', alt: 'Image 1' },
+        { src: 'image2.jpg', link: 'https://example.com/image2', alt: 'Image 2' },
         // Добавьте больше изображений по мере необходимости
     ];
 
