@@ -103,11 +103,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const audio = document.getElementById('background-audio');
     const volumeSlider = document.getElementById('volume-slider');
     const pauseButton = document.getElementById('pause-button');
-
-    // Автовоспроизведение аудио при каждом обновлении страницы
-    audio.play().catch(error => {
-        console.error('Error playing audio:', error);
-    });
+    const startAudioButton = document.getElementById('start-audio-button');
 
     // Управление громкостью
     volumeSlider.value = audio.volume;
@@ -124,5 +120,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
             audio.pause();
             pauseButton.textContent = 'Play';
         }
+    });
+
+    // Автовоспроизведение аудио после взаимодействия с пользователем
+    startAudioButton.addEventListener('click', () => {
+        audio.play().catch(error => {
+            console.error('Error playing audio:', error);
+        });
     });
 });

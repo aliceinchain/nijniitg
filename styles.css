@@ -101,3 +101,36 @@ body {
     font-size: 16px;
     cursor: pointer;
 }
+
+#info-panel {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 20;
+}
+
+#info-panel p {
+    color: white;
+    font-size: 18px;
+    margin: 0;
+}
+
+#start-audio-button {
+    background: none;
+    border: 2px solid white;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#start-audio-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
