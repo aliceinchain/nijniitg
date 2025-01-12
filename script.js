@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         fetch('phrases.txt')
             .then(response => response.text())
             .then(data => {
-                let phrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
+                const phrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
                 const maxPhrases = 4; // Максимальное количество одновременно отображаемых фраз
                 let currentPhrases = [];
 
@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     if (phrases.length === 0) return;
                     const randomIndex = Math.floor(Math.random() * phrases.length);
                     const phrase = phrases[randomIndex];
-                    phrases.splice(randomIndex, 1); // Удаление использованной фразы из списка
 
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
@@ -102,4 +101,28 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // Добавление проплывающих надписей
     addFloatingText();
+
+    // Воспроизведение аудио
+    const audio = document.getElementById('background-audio');
+    const volumeSlider = document.getElementById('volume-slider');
+    const pauseButton = document.getElementById('pause-button');
+
+    audio.play();
+
+    // Управление громкостью
+    volumeSlider.value = audio.volume;
+    volumeSlider.addEventListener('input', (event) => {
+        audio.volume = event.target.value;
+    });
+
+    // Управление паузой/воспроизведением
+    pauseButton.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+            pauseButton.textContent = 'Pause';
+        } else {
+            audio.pause();
+            pauseButton.textContent = 'Play';
+        }
+    });
 });
