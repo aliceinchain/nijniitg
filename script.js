@@ -112,14 +112,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             };
         });
     }
-
-    // Пример данных для новых изображений
-    const newImages = [
-        { src: 'images/new-image-1.jpg', alt: 'New Image 1', link: 'https://t.me/newlink1' },
-        { src: 'images/new-image-2.jpg', alt: 'New Image 2', link: 'https://t.me/newlink2' },
-        // Добавьте больше изображений по мере необходимости
-    ];
-
     // Добавление новых изображений
     addNewImages(newImages);
 
