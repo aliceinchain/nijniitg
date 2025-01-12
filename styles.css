@@ -69,13 +69,19 @@ body {
     }
 }
 
+#scroll-container {
+    width: 100%;
+    height: 80vh; /* Высота контейнера для прокрутки */
+    overflow-y: auto; /* Включаем вертикальную прокрутку */
+    margin-top: 20px;
+}
+
 #image-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    max-width: calc(15 * 110px); /* 15 изображений по 100px шириной + 10px отступ */
-    margin: auto; /* Центрирует контейнер по горизонтали */
-    z-index: 5; /* Убедитесь, что изображения отображаются под текстом */
+    justify-content: center;
+    padding: 10px;
 }
 
 .image-link {
@@ -87,8 +93,8 @@ body {
     justify-content: center;
     text-decoration: none;
     color: inherit;
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
 }
 
 .image-link img {
@@ -145,12 +151,12 @@ body {
 }
 
 #info-panel a {
-    color: #ffffff; /* Цвет ссылки */
+    color: white; /* Цвет ссылки */
     text-decoration: underline; /* Подчеркивание ссылки */
 }
 
 #info-panel a:hover {
-    color: #ffffff; /* Цвет ссылки при наведении */
+    color: #0078d7; /* Цвет ссылки при наведении */
 }
 
 #start-audio-button {

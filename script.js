@@ -34,10 +34,44 @@ document.addEventListener('DOMContentLoaded', (event) => {
         imagesArray.forEach(imgLink => container.appendChild(imgLink));
     }
 
+    // Функция для сжатия изображений
+    function resizeImage(imgElement, maxWidth, maxHeight) {
+        return new Promise((resolve) => {
+            imgElement.onload = () => {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+
+                let width = imgElement.width;
+                let height = imgElement.height;
+
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                context.drawImage(imgElement, 0, 0, width, height);
+
+                const dataUrl = canvas.toDataURL('image/jpeg');
+                resolve(dataUrl);
+            };
+        });
+    }
+
     // Загрузка изображений и сортировка по цвету
     const imageLinks = document.querySelectorAll('.image-link img');
     let loadedImages = 0;
-    imageLinks.forEach(img => {
+    imageLinks.forEach(async (img) => {
+        const dataUrl = await resizeImage(img, 200, 200);
+        img.src = dataUrl;
         img.onload = () => {
             loadedImages++;
             if (loadedImages === imageLinks.length) {
