@@ -59,15 +59,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
         fetch('phrases.txt')
             .then(response => response.text())
             .then(data => {
-                const phrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
+                const allPhrases = data.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
                 const maxPhrases = 4; // Максимальное количество одновременно отображаемых фраз
                 let currentPhrases = [];
 
                 function addPhrase() {
-                    if (phrases.length === 0) return;
-                    const randomIndex = Math.floor(Math.random() * phrases.length);
-                    const phrase = phrases[randomIndex];
-                    phrases.splice(randomIndex, 1); // Удаление использованной фразы из списка
+                    if (allPhrases.length === 0) return;
+                    const randomIndex = Math.floor(Math.random() * allPhrases.length);
+                    const phrase = allPhrases[randomIndex];
+                    allPhrases.splice(randomIndex, 1); // Удаление использованной фразы из списка
 
                     const textElement = document.createElement('div');
                     textElement.className = 'floating-text';
