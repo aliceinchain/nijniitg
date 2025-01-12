@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const startAudioButton = document.getElementById('start-audio-button');
     const infoPanel = document.getElementById('info-panel');
     const backgroundOverlay = document.getElementById('background-overlay');
+    const blurOverlay = document.getElementById('blur-overlay');
 
     // Управление громкостью
     volumeSlider.value = audio.volume;
@@ -128,6 +129,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     startAudioButton.addEventListener('click', () => {
         infoPanel.style.display = 'none';
         backgroundOverlay.style.display = 'none';
+        blurOverlay.style.display = 'none';
         audio.play().catch(error => {
             console.error('Error playing audio:', error);
         });
@@ -136,4 +138,5 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // Показать панель при загрузке страницы
     infoPanel.style.display = 'flex';
     backgroundOverlay.style.display = 'block';
+    blurOverlay.style.display = 'block';
 });
