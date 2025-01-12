@@ -104,6 +104,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const volumeSlider = document.getElementById('volume-slider');
     const pauseButton = document.getElementById('pause-button');
     const startAudioButton = document.getElementById('start-audio-button');
+    const infoPanel = document.getElementById('info-panel');
+    const backgroundOverlay = document.getElementById('background-overlay');
 
     // Управление громкостью
     volumeSlider.value = audio.volume;
@@ -122,10 +124,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 
-    // Воспроизведение аудио при нажатии на кнопку
+    // Показать панель и воспроизвести аудио при нажатии на кнопку
     startAudioButton.addEventListener('click', () => {
+        infoPanel.style.display = 'none';
+        backgroundOverlay.style.display = 'none';
         audio.play().catch(error => {
             console.error('Error playing audio:', error);
         });
     });
+
+    // Показать панель при загрузке страницы
+    infoPanel.style.display = 'block';
+    backgroundOverlay.style.display = 'block';
 });
