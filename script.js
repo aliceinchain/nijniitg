@@ -78,6 +78,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // Функция для добавления новых изображений
     function addNewImages(images) {
+        if (!images || images.length === 0) {
+            console.error('No images to add');
+            return;
+        }
+
         const container = document.getElementById('image-container');
         images.forEach(image => {
             const link = document.createElement('a');
@@ -112,6 +117,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
             };
         });
     }
+
+
 
     // Добавление новых изображений
     addNewImages(newImages);
