@@ -70,10 +70,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     textElement.className = 'floating-text';
                     textElement.textContent = phrase.trim();
 
-                    // Случайное размещение текста
-                    const x = Math.random() * window.innerWidth;
+                    // Случайное размещение текста по вертикали
                     const y = Math.random() * window.innerHeight;
-                    textElement.style.left = `${x}px`;
                     textElement.style.top = `${y}px`;
 
                     container.appendChild(textElement);
