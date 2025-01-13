@@ -1,13 +1,17 @@
+from flask import Flask, render_template
 import sqlite3
 
-def check_database():
+app = Flask(__name__)
+
+@app.route('/')
+def index():
     conn = sqlite3.connect('channels.db')
     cursor = conn.cursor()
     cursor.execute('SELECT channel_link, image_filename FROM channels')
     channels = cursor.fetchall()
     conn.close()
 
-    for channel in channels:
-        print(channel)
+    return render_template('index.html', channels=channels)
 
-check_database()
+if __name__ == '__main__':
+    app.run(debug=True)
