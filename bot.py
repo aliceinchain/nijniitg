@@ -12,7 +12,7 @@ load_dotenv()
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 API_ID = os.getenv('API_ID')
 API_HASH = os.getenv('API_HASH')
-
+USER_PHONE_NUMBER = os.getenv('USER_PHONE_NUMBER')  # Add your phone number here
 
 # Initialize database
 def init_db():
@@ -30,9 +30,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-
 init_db()
-
 
 # Bot command handlers
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -48,7 +46,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
-
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -59,7 +56,6 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif query.data == 'mode_graph':
         context.user_data['mode'] = 'graph'
         await query.edit_message_text('Send me a channel link to analyze its connections.')
-
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mode = context.user_data.get('mode', 'add')
@@ -77,13 +73,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await analyze_channel(update, context, channel_link)
 
-
 async def add_channel(update: Update, context: ContextTypes.DEFAULT_TYPE, channel_link):
     try:
         chat = await context.bot.get_chat(channel_link)
         photo = chat.photo.big_file_id
         file = await context.bot.get_file(photo)
-
         os.makedirs('images', exist_ok=True)
         file_path = f'images/{chat.id}.jpg'
         await file.download_to_drive(file_path)
@@ -102,13 +96,13 @@ async def add_channel(update: Update, context: ContextTypes.DEFAULT_TYPE, channe
     except Exception as e:
         await update.message.reply_text(f'Error: {str(e)}')
 
-
 async def analyze_channel(update: Update, context: ContextTypes.DEFAULT_TYPE, channel_link):
     try:
         await update.message.reply_text('Analyzing channel connections...')
 
-        client = TelegramClient('bot_session', API_ID, API_HASH)
-        await client.start()
+        # Use a user session to fetch the data
+        client = TelegramClient('user_session', API_ID, API_HASH)
+        await client.start(phone=USER_PHONE_NUMBER)
 
         # Get channel entity
         channel = await client.get_entity(channel_link)
@@ -142,7 +136,6 @@ async def analyze_channel(update: Update, context: ContextTypes.DEFAULT_TYPE, ch
     except Exception as e:
         await update.message.reply_text(f'Error during analysis: {str(e)}')
 
-
 def update_website(channel_link, image_filename):
     html_file_path = 'index.html'
     with open(html_file_path, 'r', encoding='utf-8') as file:
@@ -160,9 +153,8 @@ def update_website(channel_link, image_filename):
     with open(html_file_path, 'w', encoding='utf-8') as file:
         file.write(html_content)
 
-
 def main():
-    if not all([TELEGRAM_BOT_TOKEN, API_ID, API_HASH]):
+    if not all([TELEGRAM_BOT_TOKEN, API_ID, API_HASH, USER_PHONE_NUMBER]):
         raise ValueError("Missing required environment variables")
 
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
@@ -172,7 +164,6 @@ def main():
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     application.run_polling()
-
 
 if __name__ == '__main__':
     main()
