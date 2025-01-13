@@ -5,7 +5,235 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Нежный ТГ</title>
     <style>
-        /* Ваш CSS стиль */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 120%;
+            height: 120%;
+            object-fit: cover;
+            z-index: 0;
+            transform: translateZ(0);
+            left: -10%;
+            top: -10%;
+        }
+
+        #background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            display: none;
+        }
+
+        #floating-text-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-text {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            opacity: 0;
+            user-select: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+
+        #scroll-container {
+            width: 100%;
+            height: 80vh;
+            overflow-y: auto;
+            margin-top: 20px;
+            z-index: 4;
+            position: relative;
+        }
+
+        #image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            padding: 10px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .image-link {
+            border: 2px solid #000000;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: inherit;
+            width: 100px;
+            height: 100px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .image-link img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #audio-player {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 9998;
+        }
+
+        #volume-slider {
+            width: 200px;
+            margin-right: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            height: 5px;
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+
+        #volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #ffffff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        #volume-slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #ffffff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        #pause-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #info-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 9997;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #info-panel p {
+            color: white;
+            font-size: 18px;
+            margin: 0;
+        }
+
+        #info-panel a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        #info-panel a:hover {
+            color: #0078d7;
+        }
+
+        #start-audio-button {
+            background: none;
+            border: 2px solid white;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            z-index: 9997;
+            position: relative;
+        }
+
+        #start-audio-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #track-select {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: 2px solid white;
+            padding: 10px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 9997;
+            position: relative;
+        }
+
+        #track-select:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     </style>
 </head>
 <body>
