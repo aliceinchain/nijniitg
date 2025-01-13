@@ -12,10 +12,19 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: url('bad_apple.gif') no-repeat center center fixed;
-            background-size: cover;
-            background-attachment: fixed;
             overflow: hidden;
+            position: relative;
+        }
+
+        #background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            transform: translateZ(0);
         }
 
         #background-overlay {
@@ -41,12 +50,12 @@
         }
 
         #floating-text-container {
-            position: fixed;  /* Changed to fixed */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 9999;  /* Highest z-index */
+            z-index: 9999;
             pointer-events: none;
             overflow: hidden;
         }
@@ -60,7 +69,7 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             pointer-events: none;
             opacity: 0;
-            user-select: none;  /* Prevent text selection */
+            user-select: none;
         }
 
         @keyframes float {
@@ -86,7 +95,7 @@
             overflow-y: auto;
             margin-top: 20px;
             z-index: 4;
-            position: relative;  /* Added position */
+            position: relative;
         }
 
         #image-container {
@@ -130,7 +139,7 @@
             background: rgba(0, 0, 0, 0.5);
             padding: 10px;
             border-radius: 5px;
-            z-index: 9998;  /* Just below floating text */
+            z-index: 9998;
         }
 
         #volume-slider {
@@ -181,7 +190,7 @@
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            z-index: 9997;  /* Below floating text but above other elements */
+            z-index: 9997;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -218,15 +227,34 @@
         #start-audio-button:hover {
             background: rgba(255, 255, 255, 0.2);
         }
+
+        #track-select {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: 2px solid white;
+            padding: 10px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 9997;
+            position: relative;
+        }
+
+        #track-select:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     </style>
 </head>
 <body>
+    <video id="background-video" autoplay muted loop>
+        <source src="background.mp4" type="video/mp4">
+    </video>
     <div id="background-overlay"></div>
     <div id="blur-overlay"></div>
     <div id="floating-text-container"></div>
     <div id="scroll-container">
         <div id="image-container">
-  <a href="https://t.me/shitpost220" class="image-link" target="_blank">
+            <a href="https://t.me/shitpost220" class="image-link" target="_blank">
                 <img src="images/-1002321237576.jpg" alt="Channel Avatar">
             </a>
             
@@ -236,8 +264,8 @@
             
             <a href="https://t.me/fuhishmeeeeeme" class="image-link" target="_blank">
                 <img src="images/-1002399741987.jpg" alt="Channel Avatar">
-            </a>
-            
+             </a>
+
                     <a href="https://t.me/maruimoon" class="image-link" target="_blank">
                         <img src="images/-1002166339084.jpg" alt="Channel Avatar">
                     </a>
@@ -941,9 +969,13 @@
         </div>
     </div>
     <div id="audio-player">
-        <audio id="background-audio" src="audio.mp3" loop></audio>
+        <audio id="background-audio" src="audio1.mp3" loop></audio>
         <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
         <button id="pause-button">АСТААНВИ МУЗЫКУУУ</button>
+        <select id="track-select">
+            <option value="audio1.mp3">kiyosumi, akitakita - call out my name </option>
+            <option value="audio.mp3">Timon Ableton - shtirlitz</option>
+        </select>
     </div>
     <div id="info-panel">
         <p>Халоу деар юзерс, это так называемый link tree по Нижним ТГ каналам. Огромное спасибо <a href="https://t.me/golodomorok" target="_blank">@golodomorok</a> и его каналу <a href="https://t.me/oil_records" target="_blank">https://t.me/oil_records</a> за помощь в "собери их всех". Канал создательницы <a href="https://t.me/ualicechtotobolit" target="_blank">https://t.me/ualicechtotobolit</a>, по всем вопросам обращаться в чат канала или в личку <a href="https://t.me/aliceinpain" target="_blank">@aliceinpain</a> (за добавлением в список туда тоже). З.Ы. - всё сделано через ии а так-же через жопу с минимальными скиллами в програмизничиство, так что тебе придется подождать пока изображения прогрузятся и обновить страничку чтоб отсортировать всё по цвету.</p>
@@ -960,23 +992,25 @@
             const backgroundOverlay = document.getElementById('background-overlay');
             const blurOverlay = document.getElementById('blur-overlay');
             const textContainer = document.getElementById('floating-text-container');
+            const trackSelect = document.getElementById('track-select');
+            const backgroundVideo = document.getElementById('background-video');
 
             // Функция для создания плавающего текста
             function createFloatingText(text) {
                 const floatingText = document.createElement('div');
                 floatingText.className = 'floating-text';
                 floatingText.textContent = text;
-                
+
                 // Случайная позиция по вертикали
                 const yPosition = Math.random() * (window.innerHeight - 50);
                 floatingText.style.top = `${yPosition}px`;
-                
+
                 // Случайная длительность анимации
                 const duration = 15 + Math.random() * 10;
                 floatingText.style.animation = `float ${duration}s linear`;
-                
+
                 textContainer.appendChild(floatingText);
-                
+
                 // Удаление элемента после завершения анимации
                 floatingText.addEventListener('animationend', () => {
                     floatingText.remove();
@@ -988,7 +1022,7 @@
                 .then(response => response.text())
                 .then(text => {
                     const phrases = text.split('/').map(phrase => phrase.trim()).filter(phrase => phrase);
-                    
+
                     // Создание новых фраз с интервалом
                     setInterval(() => {
                         const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
@@ -1022,9 +1056,25 @@
                 });
             });
 
+            trackSelect.addEventListener('change', () => {
+                const selectedTrack = trackSelect.value;
+                audio.src = selectedTrack;
+                audio.play().catch(error => {
+                    console.error('Error playing audio:', error);
+                });
+            });
+
             infoPanel.style.display = 'flex';
             backgroundOverlay.style.display = 'block';
             blurOverlay.style.display = 'block';
+
+            // Эффект параллакса для видео
+            document.addEventListener('mousemove', (e) => {
+                const { clientX, clientY } = e;
+                const x = clientX / window.innerWidth;
+                const y = clientY / window.innerHeight;
+                backgroundVideo.style.transform = `translate(-${x * 10}px, -${y * 10}px)`;
+            });
         });
     </script>
 </body>
