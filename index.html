@@ -17,16 +17,16 @@
         }
 
         #background-video {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 120%;
-        height: 120%;
-        object-fit: cover;
-        z-index: 0;
-        transform: translateZ(0);
-        left: -10%;
-        top: -10%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 120%;
+            height: 120%;
+            object-fit: cover;
+            z-index: 0;
+            transform: translateZ(0);
+            left: -10%;
+            top: -10%;
         }
 
 
@@ -973,8 +973,88 @@
         <p>Халоу деар юзерс, это так называемый link tree по Нижним ТГ каналам. Огромное спасибо <a href="https://t.me/golodomorok" target="_blank">@golodomorok</a> и его каналу <a href="https://t.me/oil_records" target="_blank">https://t.me/oil_records</a> за помощь в "собери их всех". Канал создательницы <a href="https://t.me/ualicechtotobolit" target="_blank">https://t.me/ualicechtotobolit</a>, по всем вопросам обращаться в чат канала или в личку <a href="https://t.me/aliceinpain" target="_blank">@aliceinpain</a> (за добавлением в список туда тоже). З.Ы. - всё сделано через ии а так-же через жопу с минимальными скиллами в програмизничиство, так что тебе придется подождать пока изображения прогрузятся и обновить страничку чтоб отсортировать всё по цвету.</p>
         <button id="start-audio-button">дааа сука дай посмотреть</button>
     </div>
-
+    <canvas id="analyzeCanvas" style="display: none;"></canvas>
+    
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Добавляем функцию для анализа яркости изображения
+            function getImageBrightness(imgElement) {
+                return new Promise((resolve) => {
+                    const canvas = document.getElementById('analyzeCanvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Устанавливаем размер canvas
+                    canvas.width = imgElement.naturalWidth || imgElement.width;
+                    canvas.height = imgElement.naturalHeight || imgElement.height;
+                    
+                    // Рисуем изображение на canvas
+                    ctx.drawImage(imgElement, 0, 0);
+                    
+                    // Получаем данные пикселей
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+                    
+                    let brightness = 0;
+                    
+                    // Вычисляем среднюю яркость
+                    for(let i = 0; i < data.length; i += 4) {
+                        // Используем формулу: (R + G + B) / 3
+                        brightness += (data[i] + data[i + 1] + data[i + 2]) / 3;
+                    }
+                    
+                    // Возвращаем среднюю яркость
+                    resolve(brightness / (data.length / 4));
+                });
+            }
+
+            // Функция сортировки изображений
+            async function sortImagesByBrightness() {
+                const container = document.getElementById('image-container');
+                const links = Array.from(container.getElementsByClassName('image-link'));
+                
+                // Создаем массив промисов для анализа яркости
+                const brightnessPromises = links.map(async (link) => {
+                    const img = link.querySelector('img');
+                    const brightness = await getImageBrightness(img);
+                    return { link, brightness };
+                });
+                
+                // Ждем завершения всех промисов
+                const results = await Promise.all(brightnessPromises);
+                
+                // Сортируем по яркости
+                results.sort((a, b) => b.brightness - a.brightness);
+                
+                // Переупорядочиваем элементы
+                results.forEach(result => {
+                    container.appendChild(result.link);
+                });
+            }
+
+            // Добавляем обработчик для видео, чтобы оно повторялось
+            const backgroundVideo = document.getElementById('background-video');
+            backgroundVideo.loop = true;
+
+            // Запускаем сортировку при загрузке всех изображений
+            const images = document.querySelectorAll('#image-container img');
+            let loadedImages = 0;
+
+            images.forEach(img => {
+                if (img.complete) {
+                    loadedImages++;
+                    if (loadedImages === images.length) {
+                        sortImagesByBrightness();
+                    }
+                } else {
+                    img.addEventListener('load', () => {
+                        loadedImages++;
+                        if (loadedImages === images.length) {
+                            sortImagesByBrightness();
+                        }
+                    });
+                }
+            });
+
         document.addEventListener('DOMContentLoaded', (event) => {
             const audio = document.getElementById('background-audio');
             const volumeSlider = document.getElementById('volume-slider');
