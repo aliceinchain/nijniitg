@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Channel Graph</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('bad_apple.gif') no-repeat center center fixed;
+            background-size: cover;
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+
+        #graph-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #forward-button {
+            right: 20px;
+        }
+
+        .nav-button:hover {
+            background: rgba(0, 0, 0, 1);
+        }
+    </style>
+</head>
+<body>
+    <div id="graph-container"></div>
+    <button id="forward-button" class="nav-button" onclick="window.location.href='index.html'">→</button>
+
+    <script>
+        const graph = new graphology.Graph();
+
+        // Load channel data from the database
+        fetch('/api/channels')
+            .then(response => response.json())
+            .then(data => {
+                // Add nodes
+                data.nodes.forEach(node => {
+                    graph.addNode(node.id, {
+                        label: node.name,
+                        size: node.size || 10,
+                        color: '#ffffff'
+                    });
+                });
+
+                // Add edges
+                data.edges.forEach(edge => {
+                    if (!graph.hasEdge(edge.source, edge.target)) {
+                        graph.addEdge(edge.source, edge.target, {
+                            weight: edge.weight || 1
+                        });
+                    }
+                });
+
+                // Initialize sigma
+                const renderer = new Sigma(graph, document.getElementById('graph-container'), {
+                    minCameraRatio: 0.1,
+                    maxCameraRatio: 10,
+                    nodeProgramClasses: {
+                        border: sigma.NodeProgramBorder
+                    }
+                });
+            });
+
+        // Navigation buttons
+
+        document.getElementById('forward-button').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+    </script>
+</body>
+</html>
